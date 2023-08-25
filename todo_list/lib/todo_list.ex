@@ -6,17 +6,18 @@ defmodule TodoList do
   Contexts are also responsible for managing your data, regardless
   if it comes from the database, an external API or others.
   """
-  @file_path "./todo_list-1.txt"
+  @file_path "./todo_list.txt"
+  @storage_location :file
 
   def add(item_content) do
     new_item = %{item_content: item_content, index: get_index()}
-    save_to_file(new_item)
+    save_new_item(new_item, @storage_location)
     {:ok, new_item}
   end
 
-  defp save_to_file(new_item) do
+  defp save_new_item(new_item, :file) do
     new_items =
-      exist_items()
+      exist_items(@storage_location)
       |> List.insert_at(0, new_item)
       |> Jason.encode!()
 
@@ -24,7 +25,7 @@ defmodule TodoList do
   end
 
   defp get_index do
-    latest_item = exist_items() |> List.first()
+    latest_item = exist_items(@storage_location) |> List.first()
 
     if is_nil(latest_item) do
       1
@@ -33,7 +34,7 @@ defmodule TodoList do
     end
   end
 
-  defp exist_items() do
+  defp exist_items(:file) do
     file_content()
     |> Jason.decode!()
     |> AtomizeKeys.atomize_string_keys()
