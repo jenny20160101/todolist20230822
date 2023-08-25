@@ -1,1 +1,1 @@
-[{"index":2,"item_content":"Add tests 2"},{"index":1,"item_content":"Add tests 1"}]
+[{"index":2,"item_content":"Add tests 2","status":"undone"},{"index":1,"item_content":"Add tests 1","status":"undone"}]

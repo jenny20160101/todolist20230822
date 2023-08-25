@@ -10,9 +10,23 @@ defmodule TodoList do
   @storage_location :file
 
   def add(item_content) do
-    new_item = %{item_content: item_content, index: get_index()}
+    new_item = %{item_content: item_content, index: get_index(), status: "undone"}
     save_new_item(new_item, @storage_location)
     {:ok, new_item}
+  end
+
+  def done(item) do
+    item = Map.put(item, :status, "done")
+
+    other_items = exist_items(@storage_location) |> Enum.reject(&(&1.index == item.index))
+    new_items = List.insert_at(other_items, item.index - 1, item)
+
+    update_items(new_items, @storage_location)
+    {:ok, item}
+  end
+
+  defp update_items(new_items, :file) do
+    :ok = File.write(@file_path, new_items |> Jason.encode!())
   end
 
   defp save_new_item(new_item, :file) do
