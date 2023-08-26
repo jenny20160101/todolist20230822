@@ -19,15 +19,19 @@ defmodule TodoList do
     item = Map.put(item, :status, "done")
 
     other_items = exist_items(@storage_location) |> Enum.reject(&(&1.index == item.index))
-    new_items = List.insert_at(other_items, item.index - 1, item)
+    new_items = List.insert_at(other_items, item.index, item)
 
     update_items(new_items, @storage_location)
     {:ok, item}
   end
 
-  def list() do
+  def list(:all) do
     exist_items(@storage_location)
-    |> Enum.filter(& &1.status=="undone")
+  end
+
+  def list() do
+    list(:all)
+    |> Enum.filter(&(&1.status == "undone"))
   end
 
   defp update_items(new_items, :file) do
@@ -35,19 +39,20 @@ defmodule TodoList do
   end
 
   defp save_new_item(new_item, :file) do
+    exist_items = exist_items(@storage_location)
     new_items =
-      exist_items(@storage_location)
-      |> List.insert_at(0, new_item)
+      exist_items
+      |> List.insert_at(length(exist_items), new_item)
       |> Jason.encode!()
 
     :ok = File.write(@file_path, new_items)
   end
 
   defp get_index do
-    latest_item = exist_items(@storage_location) |> List.first()
+    latest_item = exist_items(@storage_location) |> List.last()
 
     if is_nil(latest_item) do
-      1
+      0
     else
       latest_item.index + 1
     end
