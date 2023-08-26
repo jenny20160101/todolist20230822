@@ -29,10 +29,11 @@ defmodule LoginTest do
     # 当前用户信息存储在配置文件中 ~/.todo-config
     {:ok, file_content} = File.read(@user_config_file_path)
 
-    file_content
-    |> Jason.decode!()
-    |> AtomizeKeys.atomize_string_keys()
-    |> Enum.find(fn user -> user.name == "test_user1" end)
+    user =
+      file_content
+      |> Jason.decode!()
+      |> AtomizeKeys.atomize_string_keys()
+      |> Enum.find(fn user -> user.name == "test_user1" end)
 
     assert user.name == "test_user1"
     assert user.login == true
@@ -52,6 +53,30 @@ defmodule LoginTest do
     assert {:error, "wrong pwd"} == Login.login("test_user1", "1234567")
   end
 
-  test "logout success"
+  test "logout success" do
+    {:ok, user} = User.add("test_user1", "123456")
+    assert user.name == "test_user1"
+    assert user.login == false
+
+    {:ok, user} = Login.login("test_user1", "123456")
+    assert user.name == "test_user1"
+    assert user.login == true
+
+    {:ok, user} = Login.logout()
+    assert user.name == "test_user1"
+    assert user.login == false
+
+    # 当前用户信息存储在配置文件中 ~/.todo-config
+    {:ok, file_content} = File.read(@user_config_file_path)
+
+    file_content
+    |> Jason.decode!()
+    |> AtomizeKeys.atomize_string_keys()
+    |> Enum.find(fn user -> user.name == "test_user1" end)
+
+    assert user.name == "test_user1"
+    assert user.login == false
+  end
+
   test "logout failed: user has not logged in"
 end
