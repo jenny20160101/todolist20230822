@@ -3,7 +3,7 @@ defmodule Mix.Tasks.Todo.Clear do
   use Mix.Task
 
   @shortdoc "删除所有todo项"
-  def run(args) do
+  def run(_) do
     # This will start our application
     Mix.Task.run("app.start")
 
