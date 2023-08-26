@@ -78,5 +78,7 @@ defmodule LoginTest do
     assert user.login == false
   end
 
-  test "logout failed: user has not logged in"
+  test "logout failed: user has not logged in" do
+    assert {:error, "user not login"} == Login.logout()
+  end
 end
