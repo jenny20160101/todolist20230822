@@ -11,6 +11,6 @@ defmodule Mix.Tasks.Todo.Add do
 
     {:ok, item} = TodoList.add(item_content)
     IO.puts("#{item.index}. #{item.item_content}")
-    IO.puts("Item<#{item.index}>added")
+    IO.puts("Item <#{item.index}> added")
   end
 end
