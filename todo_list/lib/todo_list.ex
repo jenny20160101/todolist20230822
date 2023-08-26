@@ -19,7 +19,7 @@ defmodule TodoList do
     item = Map.put(item, :status, "done")
 
     other_items = exist_items(@storage_location) |> Enum.reject(&(&1.index == item.index))
-    new_items = List.insert_at(other_items, item.index, item)
+    new_items = List.insert_at(other_items, item.index - 1, item)
 
     update_items(new_items, @storage_location)
     {:ok, item}
@@ -44,6 +44,7 @@ defmodule TodoList do
 
   defp save_new_item(new_item, :file) do
     exist_items = exist_items(@storage_location)
+
     new_items =
       exist_items
       |> List.insert_at(length(exist_items), new_item)
@@ -56,7 +57,7 @@ defmodule TodoList do
     latest_item = exist_items(@storage_location) |> List.last()
 
     if is_nil(latest_item) do
-      0
+      1
     else
       latest_item.index + 1
     end
