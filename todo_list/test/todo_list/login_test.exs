@@ -52,8 +52,6 @@ defmodule LoginTest do
     assert {:error, "wrong pwd"} == Login.login("test_user1", "1234567")
   end
 
-  test "login failed: user is already logged in"
-
   test "logout success"
   test "logout failed: user has not logged in"
 end
