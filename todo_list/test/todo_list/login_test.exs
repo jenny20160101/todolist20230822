@@ -5,9 +5,9 @@ defmodule LoginTest do
   @user_config_file_path ".todo-config"
 
   # One-arity function name
-  # setup_all :clean_up_file_content
+  # setup_all :clean_up_users
 
-  def clean_up_file_content(_context) do
+  def clean_up_users(_context) do
     if File.exists?(@user_config_file_path) do
       :ok = File.rm(@user_config_file_path)
     end
@@ -15,7 +15,7 @@ defmodule LoginTest do
     :ok
   end
 
-  setup :clean_up_file_content
+  setup :clean_up_users
 
   test "login success" do
     {:ok, user} = User.add("test_user1", "123456")
@@ -38,7 +38,11 @@ defmodule LoginTest do
     assert user.login == true
   end
 
-  test "login failed: user not exist"
+  setup :clean_up_users
+  test "login failed: user not exist" do
+    assert {:error, "user not exist"} = Login.login("test_user1")
+  end
+
   test "login failed: wrong pwd"
   test "login failed: user is already logged in"
 
