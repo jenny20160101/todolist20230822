@@ -55,11 +55,16 @@ defmodule TodoListTest do
     assert item1.status == "done"
     assert item1.index == 1
     assert item2.status == "undone"
+
+    {:ok, item2} = TodoList.done(+2)
+    assert item1.status == "done"
+    assert item2.status == "done"
   end
 
   test "done:index not exist" do
     {:ok, _} = TodoList.add("item_content1")
     assert {:error, "Item <10> not found."} == TodoList.done(10)
+    assert {:error, "Item <-10> not found."} == TodoList.done(-10)
   end
 
   test "done:index is not integer" do

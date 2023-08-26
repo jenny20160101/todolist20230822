@@ -25,6 +25,14 @@ defmodule TodoList do
     end
   end
 
+  def done(index) when is_binary(index) do
+    if is_numeric_string?(index) do
+      index |> String.to_integer() |> done()
+    else
+      {:error, "#{index} is not integer."}
+    end
+  end
+
   def done(index) do
     {:error, "#{index} is not integer."}
   end
@@ -37,6 +45,11 @@ defmodule TodoList do
 
     update_items(new_items, @storage_location)
     {:ok, item}
+  end
+
+  defp is_numeric_string?(string) do
+    regex = ~r/^[-+]?\d+$/
+    Regex.match?(regex, string)
   end
 
   def list(:all) do
