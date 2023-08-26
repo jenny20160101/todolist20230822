@@ -91,13 +91,13 @@ defmodule TodoList do
   end
 
   defp exist_items(:file) do
-    file_content()
+    file_content(@file_path)
     |> Jason.decode!()
     |> AtomizeKeys.atomize_string_keys()
   end
 
-  defp file_content() do
-    result = File.read(@file_path)
+  def file_content(file_path) do
+    result = File.read(file_path)
 
     case result do
       {:ok, content} -> content
