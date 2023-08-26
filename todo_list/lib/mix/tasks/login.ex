@@ -8,8 +8,9 @@ defmodule Mix.Tasks.Login do
   def run(args) do
     # This will start our application
     Mix.Task.run("app.start")
-
-    [user_name, pwd] = args
+    [user_name | _] = args
+    IO.puts("Password:")
+    pwd = IO.gets("") |> String.trim()
 
     case Login.login(user_name, pwd) do
       {:ok, _} ->
