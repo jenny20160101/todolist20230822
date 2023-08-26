@@ -42,7 +42,7 @@ defmodule TodoListTest do
 
   setup :clean_up_file_content
 
-  test "done" do
+  test "done:succeed" do
     item_content1 = "Add tests 1"
     item_content2 = "Add tests 2"
     {:ok, item1} = TodoList.add(item_content1)
@@ -51,10 +51,19 @@ defmodule TodoListTest do
     assert item2.status == "undone"
     assert item1.index == 1
 
-    {:ok, item1} = TodoList.done(item1)
+    {:ok, item1} = TodoList.done(1)
     assert item1.status == "done"
     assert item1.index == 1
     assert item2.status == "undone"
+  end
+
+  test "done:index not exist" do
+    {:ok, _} = TodoList.add("item_content1")
+    assert {:error, "Item <10> not found."} == TodoList.done(10)
+  end
+
+  test "done:index is not integer" do
+    assert {:error, "10acbd is not integer."} == TodoList.done("10acbd")
   end
 
   setup :clean_up_file_content
@@ -66,7 +75,7 @@ defmodule TodoListTest do
     {:ok, item1} = TodoList.add(item_content1)
     {:ok, item2} = TodoList.add(item_content2)
     {:ok, item3} = TodoList.add(item_content3)
-    {:ok, item1} = TodoList.done(item1)
+    {:ok, item1} = TodoList.done(item1.index)
     assert item1.status == "done"
     assert item2.status == "undone"
     assert item3.status == "undone"
@@ -83,7 +92,7 @@ defmodule TodoListTest do
     {:ok, item1} = TodoList.add(item_content1)
     {:ok, item2} = TodoList.add(item_content2)
     {:ok, item3} = TodoList.add(item_content3)
-    {:ok, item1} = TodoList.done(item1)
+    {:ok, item1} = TodoList.done(item1.index)
     assert item1.status == "done"
     assert item2.status == "undone"
     assert item3.status == "undone"

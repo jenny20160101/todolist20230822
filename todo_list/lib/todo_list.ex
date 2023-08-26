@@ -15,7 +15,21 @@ defmodule TodoList do
     {:ok, new_item}
   end
 
-  def done(item) do
+  def done(index) when is_integer(index) do
+    item = exist_items(@storage_location) |> Enum.find(&(&1.index == index))
+
+    if is_nil(item) do
+      {:error, "Item <#{index}> not found."}
+    else
+      exec_done(item)
+    end
+  end
+
+  def done(index) do
+    {:error, "#{index} is not integer."}
+  end
+
+  defp exec_done(item) when is_map(item) do
     item = Map.put(item, :status, "done")
 
     other_items = exist_items(@storage_location) |> Enum.reject(&(&1.index == item.index))
