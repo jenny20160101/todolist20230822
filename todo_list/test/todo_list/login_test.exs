@@ -22,7 +22,7 @@ defmodule LoginTest do
     assert user.name == "test_user1"
     assert user.login == false
 
-    {:ok, user} = Login.login("test_user1")
+    {:ok, user} = Login.login("test_user1", "123456")
     assert user.name == "test_user1"
     assert user.login == true
 
@@ -39,11 +39,19 @@ defmodule LoginTest do
   end
 
   setup :clean_up_users
+
   test "login failed: user not exist" do
-    assert {:error, "user not exist"} = Login.login("test_user1")
+    assert {:error, "user not exist"} == Login.login("test_user1", "123456")
   end
 
-  test "login failed: wrong pwd"
+  test "login failed: wrong pwd" do
+    {:ok, user} = User.add("test_user1", "123456")
+    assert user.name == "test_user1"
+    assert user.login == false
+
+    assert {:error, "wrong pwd"} == Login.login("test_user1", "1234567")
+  end
+
   test "login failed: user is already logged in"
 
   test "logout success"

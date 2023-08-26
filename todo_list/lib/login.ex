@@ -2,15 +2,19 @@ defmodule Login do
   @user_config_file_path ".todo-config"
   @storage_location :file
 
-  def login(user_name) do
-    case User.get(user_name) do
-      nil ->
+  def login(user_name, pwd) do
+    user = User.get(user_name)
+
+    cond do
+      is_nil(user) ->
         {:error, "user not exist"}
 
-      user ->
+      user.pwd != pwd ->
+        {:error, "wrong pwd"}
+
+      true ->
         user = Map.put(user, :login, true)
         save_updated_user(user)
-
         {:ok, user}
     end
   end
