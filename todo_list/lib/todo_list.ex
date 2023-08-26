@@ -25,6 +25,11 @@ defmodule TodoList do
     {:ok, item}
   end
 
+  def list() do
+    exist_items(@storage_location)
+    |> Enum.filter(& &1.status=="undone")
+  end
+
   defp update_items(new_items, :file) do
     :ok = File.write(@file_path, new_items |> Jason.encode!())
   end
